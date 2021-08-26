@@ -9,7 +9,7 @@ def qrCode(url):
     qr.add_data(url)
     qr.make(fit=True)
     img = qr.make_image(fill='black', back_color='white')
-    img.save('qrcode001.png')
+    img.save('qrcode.png')
 
 app=Flask(__name__)
 @app.route('/')
@@ -20,10 +20,13 @@ def root():
 def home():
     global url
     url = request.form['url']
-    print(url)
+    qrCode(url)
     return render_template("download.html")
+
+@app.route('/view')
+def view():
+    return send_file('qrcode.png')
 
 @app.route('/download')
 def download():
-    qrCode(url)
-    return send_file('qrcode001.png')
+    return send_file('qrcode.png',as_attachment=True)
